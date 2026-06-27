@@ -1,6 +1,6 @@
 # OpenCode Sub-Agents Collection
 
-A comprehensive collection of specialized sub-agents for [OpenCode](https://opencode.ai), converted from the Claude Code agents collection. Designed to enhance development workflows through domain-specific expertise and intelligent task delegation.
+A comprehensive collection of 47 specialized agents (46 sub-agents + 1 orchestrator) for [OpenCode](https://opencode.ai), converted from the Claude Code agents collection. Designed to enhance development workflows through domain-specific expertise and intelligent task delegation.
 
 ## What are OpenCode Agents?
 
@@ -57,6 +57,7 @@ You can also configure agents via `opencode.json`:
 | [fullstack-developer](./fullstack-developer.md) | End-to-end feature implementation |
 | [iac-expert](./iac-expert.md) | Infrastructure as Code and cloud resources |
 | [ui-ux-designer](./ui-ux-designer.md) | Stunning user interfaces with modern design |
+| [state-management-architect](./state-management-architect.md) | Global store architecture and reactivity optimizations (Pinia, Redux, Zustand) |
 
 ### 🧪 Testing & Quality Assurance
 | Agent | Description |
@@ -72,6 +73,7 @@ You can also configure agents via `opencode.json`:
 | [security-auditor](./security-auditor.md) | OWASP compliance and vulnerability assessments |
 | [code-reviewer](./code-reviewer.md) | Code quality and best practices enforcement |
 | [auth-architect](./auth-architect.md) | Authentication and authorization systems |
+| [privacy-compliance-agent](./privacy-compliance-agent.md) | GDPR, CCPA audits, PII protection, and consent flows |
 
 ### ⚡ Performance & Monitoring
 | Agent | Description |
@@ -79,6 +81,8 @@ You can also configure agents via `opencode.json`:
 | [performance-profiler](./performance-profiler.md) | Performance bottleneck identification |
 | [monitoring-architect](./monitoring-architect.md) | System observability and alerting |
 | [caching-strategist](./caching-strategist.md) | Caching strategies and optimization |
+| [asset-optimizer](./asset-optimizer.md) | Bundler configuration, assets compression, and code splitting |
+| [observability-analyst](./observability-analyst.md) | Structured logging formats, trace propagation, and monitoring dashboards |
 
 ### 🚀 DevOps & Deployment
 | Agent | Description |
@@ -98,6 +102,7 @@ You can also configure agents via `opencode.json`:
 | [mindful-dev](./mindful-dev.md) | Thoughtful development with educational focus |
 | [migration-specialist](./migration-specialist.md) | Schema and data migrations |
 | [monorepo-engineer](./monorepo-engineer.md) | Monorepo management and tooling |
+| [api-mock-specialist](./api-mock-specialist.md) | Offline mock servers, data seeding, and MSW setup |
 
 ### 🌐 API & Communication
 | Agent | Description |
@@ -106,6 +111,7 @@ You can also configure agents via `opencode.json`:
 | [graphql-specialist](./graphql-specialist.md) | GraphQL schema design and optimization |
 | [websocket-architect](./websocket-architect.md) | Real-time communication architecture |
 | [queue-architect](./queue-architect.md) | Message queue design and patterns |
+| [workflow-dmn-engineer](./workflow-dmn-engineer.md) | BPMN process diagrams and DMN decision tables |
 
 ### 📚 Documentation & Release
 | Agent | Description |

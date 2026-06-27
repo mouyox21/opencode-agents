@@ -172,4 +172,3 @@ This project is licensed under the MIT License - see the [LICENSE](../LICENSE) f
 
 ---
 
-*Converted from the Claude Code Sub-Agents Collection for use with [OpenCode](https://opencode.ai).*

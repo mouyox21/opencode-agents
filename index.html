@@ -6,6 +6,7 @@
     <title>OpenCode Agents — Interactive Directory</title>
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <!-- SEO Meta Tags -->
     <meta name="description" content="Explore OpenCode Agents — an interactive directory of 258 specialized sub-agents and 1 primary orchestrator. Access system prompts, tool permissions, and custom configurations.">
     <meta name="keywords" content="OpenCode, AI, Agents, Sub-agents, Orchestrator, system prompts, coding assistant, development tools, GitHub, interactive directory">
@@ -26,7 +27,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=1782738977">
 </head>
 <body>
     <!-- Background Glow Elements -->
@@ -166,6 +167,9 @@
                 <div class="agent-grid" id="agent-grid">
                     <!-- Agent Cards will be populated here -->
                 </div>
+
+                <!-- Pagination Container -->
+                <div class="pagination-container" id="pagination-container"></div>
             </main>
         </div>
     </div>
@@ -257,7 +261,7 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Load Data and JS logic -->
-    <script src="agents-data.js"></script>
-    <script src="app.js"></script>
+    <script src="agents-data.js?v=1782738977"></script>
+    <script src="app.js?v=1782738977"></script>
 </body>
 </html>

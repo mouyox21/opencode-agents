@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     // State Variables
+    let currentPage = 1;
+    const itemsPerPage = 24;
+
     let currentFilters = {
         search: "",
         category: null,
@@ -44,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sortSelect = document.getElementById("sort-select");
     
     const agentGrid = document.getElementById("agent-grid");
+    const paginationContainer = document.getElementById("pagination-container");
     const resultsCountBadge = document.getElementById("results-count");
     const emptyState = document.getElementById("empty-state");
 
@@ -278,7 +282,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Filter Logic core execution
-    function applyFilters() {
+    function applyFilters(resetPage = true) {
+        if (resetPage) {
+            currentPage = 1;
+        }
+
         let filtered = AGENTS_DATA.filter(agent => {
             // 1. Search Query Filter
             if (currentFilters.search) {
@@ -321,14 +329,25 @@ document.addEventListener("DOMContentLoaded", () => {
             filtered.sort((a, b) => a.categoryName.localeCompare(b.categoryName) || a.name.localeCompare(b.name));
         }
 
+        const totalItems = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedList = filtered.slice(startIndex, endIndex);
+
         // Render Results
-        renderGrid(filtered);
+        renderGrid(paginatedList, totalItems);
+        renderPagination(totalItems);
     }
 
     // Render Grid Elements
-    function renderGrid(agentsList) {
+    function renderGrid(agentsList, totalCount) {
         agentGrid.innerHTML = "";
-        resultsCountBadge.textContent = agentsList.length;
+        resultsCountBadge.textContent = totalCount;
 
         if (agentsList.length === 0) {
             emptyState.style.display = "flex";
@@ -344,6 +363,132 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Apply Lucide icons for generated elements
+        lucide.createIcons();
+    }
+
+    // Render Pagination Controls
+    function renderPagination(totalItems) {
+        paginationContainer.innerHTML = "";
+        
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (totalPages <= 1) {
+            paginationContainer.style.display = "none";
+            return;
+        }
+        
+        paginationContainer.style.display = "flex";
+
+        const startItem = (currentPage - 1) * itemsPerPage + 1;
+        const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+        const summary = document.createElement("div");
+        summary.className = "pagination-summary";
+        summary.textContent = `Showing ${startItem}-${endItem} of ${totalItems}`;
+        paginationContainer.appendChild(summary);
+
+        const controls = document.createElement("div");
+        controls.className = "pagination-controls";
+        controls.setAttribute("role", "navigation");
+        controls.setAttribute("aria-label", "Pagination");
+        paginationContainer.appendChild(controls);
+        
+        // Prev button
+        const prevBtn = document.createElement("button");
+        prevBtn.className = `pag-btn prev-btn ${currentPage === 1 ? 'disabled' : ''}`;
+        prevBtn.innerHTML = `<i data-lucide="chevron-left"></i> Prev`;
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.setAttribute("aria-label", "Previous page");
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                applyFilters(false);
+                window.scrollTo({ top: agentGrid.offsetTop - 100, behavior: 'smooth' });
+            }
+        });
+        controls.appendChild(prevBtn);
+        
+        // Page numbers
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        if (endPage - startPage < maxVisiblePages - 1) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        // First page
+        if (startPage > 1) {
+            const firstBtn = document.createElement("button");
+            firstBtn.className = "pag-btn";
+            firstBtn.textContent = "1";
+            firstBtn.setAttribute("aria-label", "Go to page 1");
+            firstBtn.addEventListener("click", () => {
+                currentPage = 1;
+                applyFilters(false);
+                window.scrollTo({ top: agentGrid.offsetTop - 100, behavior: 'smooth' });
+            });
+            controls.appendChild(firstBtn);
+            
+            if (startPage > 2) {
+                const dots = document.createElement("span");
+                dots.className = "pag-dots";
+                dots.textContent = "...";
+                controls.appendChild(dots);
+            }
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement("button");
+            pageBtn.className = `pag-btn ${currentPage === i ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.setAttribute("aria-label", `Go to page ${i}`);
+            if (currentPage === i) {
+                pageBtn.setAttribute("aria-current", "page");
+            }
+            pageBtn.addEventListener("click", () => {
+                currentPage = i;
+                applyFilters(false);
+                window.scrollTo({ top: agentGrid.offsetTop - 100, behavior: 'smooth' });
+            });
+            controls.appendChild(pageBtn);
+        }
+        
+        // Last page
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                const dots = document.createElement("span");
+                dots.className = "pag-dots";
+                dots.textContent = "...";
+                controls.appendChild(dots);
+            }
+            
+            const lastBtn = document.createElement("button");
+            lastBtn.className = "pag-btn";
+            lastBtn.textContent = totalPages;
+            lastBtn.setAttribute("aria-label", `Go to page ${totalPages}`);
+            lastBtn.addEventListener("click", () => {
+                currentPage = totalPages;
+                applyFilters(false);
+                window.scrollTo({ top: agentGrid.offsetTop - 100, behavior: 'smooth' });
+            });
+            controls.appendChild(lastBtn);
+        }
+        
+        // Next button
+        const nextBtn = document.createElement("button");
+        nextBtn.className = `pag-btn next-btn ${currentPage === totalPages ? 'disabled' : ''}`;
+        nextBtn.innerHTML = `Next <i data-lucide="chevron-right"></i>`;
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.setAttribute("aria-label", "Next page");
+        nextBtn.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                applyFilters(false);
+                window.scrollTo({ top: agentGrid.offsetTop - 100, behavior: 'smooth' });
+            }
+        });
+        controls.appendChild(nextBtn);
+        
         lucide.createIcons();
     }
 

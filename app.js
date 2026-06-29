@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Setup Raw Link
         // Format path correctly
         const normalizedPath = agent.path.replace('./', '');
-        modalRawBtn.href = `https://github.com/mouyox21/opencode-agents/blob/master/opencode%20agent/${normalizedPath}`;
+        modalRawBtn.href = `https://github.com/mouyox21/opencode-agents/blob/master/${normalizedPath}`;
 
         // Setup Code Text values
         codePromptText.textContent = agent.prompt;

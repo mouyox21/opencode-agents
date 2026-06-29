@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenCode Agents — Interactive Directory</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Glow Elements -->
+    <div class="ambient-glow glow-top-left"></div>
+    <div class="ambient-glow glow-bottom-right"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="logo-circle">
+                    <i data-lucide="cpu" class="logo-icon"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>OpenCode Agents</h1>
+                    <span class="subtext">Specialized AI Sub-Agents Library</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="https://github.com/mouyox21/opencode-agents" target="_blank" class="btn btn-github">
+                    <i data-lucide="github"></i> GitHub Repo
+                </a>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <section class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper cyan">
+                    <i data-lucide="layers"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-total-agents">259</span>
+                    <span class="stat-label">Total Agents</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper indigo">
+                    <i data-lucide="folder-tree"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-categories">10</span>
+                    <span class="stat-label">Thematic Categories</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper pink">
+                    <i data-lucide="crown"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-primary">1</span>
+                    <span class="stat-label">Primary Orchestrator</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper green">
+                    <i data-lucide="terminal"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-bash-agents">0</span>
+                    <span class="stat-label">Bash Enabled</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Sidebar (Filters) -->
+            <aside class="sidebar-filters">
+                <div class="filter-group">
+                    <label class="filter-label" for="search-input">
+                        <i data-lucide="search"></i> Search Agents
+                    </label>
+                    <div class="search-wrapper">
+                        <input type="text" id="search-input" placeholder="Search by name, tools, desc..." autocomplete="off">
+                        <button id="clear-search" class="clear-btn" style="display: none;">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label"><i data-lucide="filter"></i> Categories</span>
+                    <div class="category-list" id="category-filter-container">
+                        <!-- Categories will be generated dynamically -->
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label"><i data-lucide="settings"></i> Tool Permissions</span>
+                    <div class="checkbox-filters">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="tool-write">
+                            <span class="custom-checkbox"></span>
+                            <span class="checkbox-text">Requires <code>write</code></span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="tool-edit">
+                            <span class="custom-checkbox"></span>
+                            <span class="checkbox-text">Requires <code>edit</code></span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="tool-bash">
+                            <span class="custom-checkbox"></span>
+                            <span class="checkbox-text">Requires <code>bash</code></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button id="reset-filters" class="btn btn-secondary btn-full">
+                    <i data-lucide="rotate-ccw"></i> Reset Filters
+                </button>
+            </aside>
+
+            <!-- Agent Grid -->
+            <main class="content-area">
+                <div class="results-header">
+                    <h2 class="section-title">All Specialized Agents <span class="badge" id="results-count">0</span></h2>
+                    <div class="sorting-controls">
+                        <label for="sort-select">Sort by:</label>
+                        <select id="sort-select">
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <i data-lucide="search-code" class="empty-icon"></i>
+                    <h3>No agents match your criteria</h3>
+                    <p>Try resetting the search terms or filters to explore the library.</p>
+                    <button class="btn btn-primary" id="empty-reset-btn">Reset Filters</button>
+                </div>
+
+                <div class="agent-grid" id="agent-grid">
+                    <!-- Agent Cards will be populated here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Agent Detail Modal -->
+    <div class="modal-overlay" id="agent-modal" style="display: none;">
+        <div class="modal-card">
+            <header class="modal-header">
+                <div class="modal-title-wrapper">
+                    <div class="modal-icon-container" id="modal-category-icon">🏗️</div>
+                    <div>
+                        <h2 id="modal-agent-name" class="modal-title">Backend Architect</h2>
+                        <div class="modal-meta">
+                            <span class="badge badge-category" id="modal-agent-category">Core Development</span>
+                            <span class="badge badge-mode" id="modal-agent-mode">subagent</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="close-btn" id="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </header>
+
+            <div class="modal-body">
+                <!-- Description -->
+                <div class="modal-desc-box">
+                    <span class="desc-title">Objective & Execution Rules</span>
+                    <p id="modal-agent-description">USE PROACTIVELY for backend architecture...</p>
+                </div>
+
+                <!-- Tool Permissions -->
+                <div class="modal-section">
+                    <h4 class="section-subheading">Enabled Tools & Permissions</h4>
+                    <div class="modal-tools-grid" id="modal-tools-container">
+                        <!-- Tools badges will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Code Section with Tabs -->
+                <div class="modal-section code-section">
+                    <div class="code-tabs-header">
+                        <button class="tab-btn active" data-tab="prompt-tab">System Prompt</button>
+                        <button class="tab-btn" data-tab="yaml-tab">YAML Config</button>
+                        <button class="tab-btn" data-tab="json-tab">JSON Config</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="prompt-tab">
+                        <div class="code-header">
+                            <span>Markdown Content</span>
+                            <button class="copy-btn" id="copy-prompt-btn">
+                                <i data-lucide="copy" class="copy-icon"></i> Copy Prompt
+                            </button>
+                        </div>
+                        <pre class="code-block"><code id="code-prompt-text" class="language-markdown">Prompt goes here...</code></pre>
+                    </div>
+
+                    <div class="tab-content" id="yaml-tab">
+                        <div class="code-header">
+                            <span>YAML Frontmatter</span>
+                            <button class="copy-btn" id="copy-yaml-btn">
+                                <i data-lucide="copy" class="copy-icon"></i> Copy YAML
+                            </button>
+                        </div>
+                        <pre class="code-block"><code id="code-yaml-text" class="language-yaml">Yaml config goes here...</code></pre>
+                    </div>
+
+                    <div class="tab-content" id="json-tab">
+                        <div class="code-header">
+                            <span>JSON Config Schema</span>
+                            <button class="copy-btn" id="copy-json-btn">
+                                <i data-lucide="copy" class="copy-icon"></i> Copy JSON
+                            </button>
+                        </div>
+                        <pre class="code-block"><code id="code-json-text" class="language-json">Json config goes here...</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="modal-footer">
+                <a href="#" target="_blank" id="modal-raw-btn" class="btn btn-secondary">
+                    <i data-lucide="external-link"></i> View Raw Source
+                </a>
+                <button class="btn btn-primary" id="modal-close-footer">Close Details</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Load Data and JS logic -->
+    <script src="agents-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
